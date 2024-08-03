@@ -5,11 +5,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import com.exceptions.EmployeeException;
+
 /**
  * Builds SessionFactory object for connecting via Hibernate
  * @author  Gowtham R
  * @version 1.0
- * /
+ */
 public class HibernateHelper {
     private static SessionFactory factory = null; 
 
@@ -37,7 +38,7 @@ public class HibernateHelper {
      * <p>
      * @throws EmployeeException  Thrown when closing the sessionfactory
                                   object close has some issues.
-     * 
+     */
     public static void closeFactory() throws EmployeeException {
         try {
             factory.close();

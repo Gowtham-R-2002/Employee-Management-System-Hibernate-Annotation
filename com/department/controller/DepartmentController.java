@@ -116,9 +116,9 @@ public class DepartmentController {
                                        .getDepartmentEmployees(departmentId);;
         if (employees.size() != 0) {
             String format = ("%-5s | %-15s | %-20s | %-15s | %-10s |"
-                             + " %-50s | %-10s |");
+                             + " %-50s | %-50s |");
             System.out.format(format, "ID", "Name", "Age", "Ph.No", 
-                              "Department", "Certificate(s)", "City");
+                              "Department", "Certificate(s)", "Address");
             System.out.println();
             for(Employee employee : employees) {
                 if (employee.getIsDeleted() == false) {

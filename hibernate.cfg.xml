@@ -29,6 +29,7 @@
       <mapping class = "com.model.Certificate"/>
       <mapping class = "com.model.Department"/>
       <mapping class = "com.model.Employee"/>
+      <mapping class = "com.model.Address"/>
       
    </session-factory>
 </hibernate-configuration>

@@ -14,6 +14,7 @@ import com.department.service.DepartmentServiceImpl;
 import com.employee.service.EmployeeService;
 import com.employee.service.EmployeeServiceImpl;
 import com.exceptions.EmployeeException;
+import com.model.Address;
 import com.model.Certificate;
 import com.model.Department;
 import com.model.Employee;
@@ -155,7 +156,7 @@ public class EmployeeController {
                 employee.displayEmployee();
                 System.out.println("What to Update ?");
                 System.out.println("1. Name\n2. Department\n3.Date of Birth\n"
-                                   + "4.Phone Number\n5. City");
+                                   + "4.Phone Number\n5. Address");
                 int updationChoice = validateAndReturnNumber();
                 updateEmployee(updationChoice, employee);
             } else {
@@ -200,8 +201,14 @@ public class EmployeeController {
             break;
 
         case 5:
+            scanner.nextLine();
+            System.out.println("Enter Door number : ");
+            String doorNumber = scanner.nextLine();
+            System.out.println("Enter Locality / Area :");
+            String locality = scanner.nextLine();
             String city = readCity();
-            employee.setCity(city);
+            Address address = new Address(doorNumber, locality, city);
+            employee.setAddress(address);
             break;
 
         default:
@@ -225,9 +232,9 @@ public class EmployeeController {
             System.out.println("No data found !");
         } else {
             String format = ("%-5s | %-15s | %-20s | %-15s | %-10s |"
-                             + " %-50s | %-10s |");
+                             + " %-50s | %-50s |");
             System.out.format(format, "ID", "Name", "Age", "Ph.No", 
-                              "Department", "Certificate(s)", "City");
+                              "Department", "Certificate(s)", "Address");
             System.out.println();
             for (Employee employee : employeeService.getEmployees()) {
                 employee.displayEmployee();
@@ -254,9 +261,15 @@ public class EmployeeController {
             int departmentId = getDepartmentId();
             LocalDate dateOfBirth = validateDateOfBirth();
             long phoneNumber = validatePhoneNumber();
+            scanner.nextLine();
+            System.out.println("Enter Door number : ");
+            String doorNumber = scanner.nextLine();
+            System.out.println("Enter Locality / Area :");
+            String locality = scanner.nextLine();
             String city = readCity();
             employeeService.addEmployee(name, departmentId, dateOfBirth,
-                                        phoneNumber, city);
+                                        phoneNumber, doorNumber, locality,
+                                        city);
             System.out.println("Added successfully !");
         }
     }
@@ -296,9 +309,9 @@ public class EmployeeController {
             int employeeId = validateAndReturnNumber();
             if (employeeService.getEmployeeById(employeeId) != null) {
                 String format = ("%-5s | %-15s | %-20s | %-15s | %-10s |"
-                                 + " %-50s | %-10s |");
+                                 + " %-50s | %-50s |");
                 System.out.format(format, "ID", "Name", "Age", "Ph.No", 
-                                  "Department", "Certificate(s)", "City");
+                                  "Department", "Certificate(s)", "Address");
                 System.out.println();
                 employeeService.getEmployeeById(employeeId).displayEmployee();
             } else {
@@ -342,9 +355,9 @@ public class EmployeeController {
             System.out.println("No data found !");
         } else {
             String format = ("%-5s | %-15s | %-20s | %-15s | %-10s |"
-                             + " %-50s | %-10s |");
+                             + " %-50s | %-50s |");
             System.out.format(format, "ID", "Name", "Age", "Ph.No", 
-                              "Department", "Certificate(s)", "City");
+                              "Department", "Certificate(s)", "Address");
             System.out.println();
             for (Employee employee : employeeService.getAllEmployees()) {
                  employee.displayEmployee();
@@ -444,7 +457,6 @@ public class EmployeeController {
      */
     public String readCity() {
         String city = "";
-        scanner.nextLine();
         while(!Validator.isAlphabeticName(city)) {
             System.out.println("Enter Employee city : ");
             city = scanner.nextLine();

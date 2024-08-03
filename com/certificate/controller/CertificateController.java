@@ -111,9 +111,9 @@ public class CertificateController {
         for(Employee e : certificates) 
             System.out.println(e.getName());
         String format = ("%-5s | %-15s | %-20s | %-15s | %-10s |"
-                         + " %-50s | %-10s |");
+                         + " %-50s | %-50s |");
         System.out.format(format, "ID", "Name", "Age", "Ph.No", 
-                          "Department", "Certificate(s)", "City");
+                          "Department", "Certificate(s)", "Address");
         System.out.println();                    
         if (certificates.size() != 0) {
             for (Employee employee : certificates) {

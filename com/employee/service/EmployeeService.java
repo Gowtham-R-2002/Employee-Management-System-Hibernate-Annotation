@@ -22,6 +22,7 @@ public interface EmployeeService {
      */    
     public void addEmployee(String name, int departmentId,
                             LocalDate dateOfBirth, long phoneNumber,
+                            String doorNumber, String locality, 
                             String city) throws EmployeeException;
 
     /** 

@@ -10,6 +10,7 @@ import com.department.service.DepartmentServiceImpl;
 import com.employee.dao.EmployeeDao;
 import com.employee.dao.EmployeeDaoImpl;
 import com.exceptions.EmployeeException;
+import com.model.Address;
 import com.model.Department;
 import com.model.Employee;
 
@@ -20,15 +21,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void addEmployee(String name, int departmentId,
                             LocalDate dateOfBirth, long phoneNumber,
+                            String doorNumber, String locality,
                             String city) throws EmployeeException {
         Department department = departmentService.getDepartment(departmentId);
         try {
+            Address address = new Address(doorNumber, locality, city);
             Employee employee = Employee.Builder.newInstance()
                                                 .setName(name)
                                                 .setDepartment(department)
                                                 .setDateOfBirth(dateOfBirth)
                                                 .setPhoneNumber(phoneNumber)
-                                                .setCity(city)
+                                                .setAddress(address)
                                                 .build(); 
             employeeDao.createEmployee(employee);   
         } catch (EmployeeException e) {

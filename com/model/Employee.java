@@ -5,6 +5,7 @@ import java.time.Period;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,8 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.model.Address;
 import com.model.Certificate;
 import com.model.Department;
 import com.util.DateUtil;
@@ -57,8 +60,9 @@ public class Employee {
                inverseJoinColumns = @JoinColumn(name = "certificate_id"))
     private Set<Certificate> certificates;
 
-    @Column(name = "employee_city")
-    private String city;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
@@ -70,7 +74,7 @@ public class Employee {
         this.dateOfBirth = builder.dateOfBirth;
         this.phoneNumber = builder.phoneNumber;
         this.department = builder.department;
-        this.city = builder.city;
+        this.address = builder.address;
         this.isDeleted = false;
         certificates = new HashSet<>();
     }
@@ -80,7 +84,7 @@ public class Employee {
         private LocalDate dateOfBirth;
         private long phoneNumber;
         private Department department;
-        private String city;
+        private Address address;
 
         public static Builder newInstance() {
             return new Builder();
@@ -108,8 +112,8 @@ public class Employee {
             return this;
         }
 
-        public Builder setCity(String city) {
-            this.city = city;
+        public Builder setAddress(Address address) {
+            this.address = address;
             return this;
         }
 
@@ -146,8 +150,8 @@ public class Employee {
         return certificates;
     }
 
-    public String getCity() {
-        return city;
+    public Address getAddress() {
+        return address;
     }
 
     public boolean getIsDeleted() {
@@ -174,8 +178,8 @@ public class Employee {
         this.department = department;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public void setIsDeleted(boolean isDeleted) {
@@ -192,13 +196,13 @@ public class Employee {
             certificateString.append(certificate.getName() + ",");
         }
         String format = ("%-5s | %-15s | %-20s | %-15s | %-10s |"
-                         + " %-50s | %-10s |");
+                         + " %-50s | %-50s |");
         System.out.format(format, getId(), getName(), calculateAge(),
                           getPhoneNumber(), getDepartment().getName(), 
                           certificateString.length() == 0 
                           ? "No Certificates found"
                           : certificateString,
-                          getCity());
+                          getAddress());
         System.out.println();
     }
 
