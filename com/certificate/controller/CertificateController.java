@@ -24,7 +24,7 @@ import com.util.Validator;
  */
 public class CertificateController {
     private static Scanner scanner = new Scanner(System.in);
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(); 
     private CertificateService certificateService = new CertificateServiceImpl();
 
     /**
