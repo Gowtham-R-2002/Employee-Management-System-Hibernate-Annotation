@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import com.certificate.service.CertificateService;
 import com.certificate.service.CertificateServiceImpl;
 import com.exceptions.EmployeeException;
@@ -20,8 +23,9 @@ import com.util.Validator;
  * @version  1.0
  */
 public class CertificateController {
-    Scanner scanner = new Scanner(System.in);
-    CertificateService certificateService = new CertificateServiceImpl();
+    private static Scanner scanner = new Scanner(System.in);
+    private static Logger logger = LogManager.getLogger();
+    private CertificateService certificateService = new CertificateServiceImpl();
 
     /**
      * <p>
@@ -70,7 +74,7 @@ public class CertificateController {
             }
         } catch (EmployeeException e) {
             isExited = true;
-            System.out.println(e.getMessage());
+            logger.error("Application exits as exception occured !", e);
             e.printStackTrace();
         }
         if(!isExited) {
@@ -87,7 +91,7 @@ public class CertificateController {
      */
     public void displayCertificates() throws EmployeeException {
         if (certificateService.getCertificates().size() == 0) {
-            System.out.println("No Certificates found");
+            logger.info("No certificates found!");
         } else {
             for (Map.Entry<Integer, Certificate> entry 
                      : certificateService.getCertificates().entrySet()) {
@@ -108,8 +112,6 @@ public class CertificateController {
     public void displayEmployees(int certificateId) throws EmployeeException {
         Set<Employee> certificates = certificateService
                                      .getCertificateEmployees(certificateId); 
-        for(Employee e : certificates) 
-            System.out.println(e.getName());
         String format = ("%-5s | %-15s | %-20s | %-15s | %-10s |"
                          + " %-50s | %-50s |");
         System.out.format(format, "ID", "Name", "Age", "Ph.No", 
@@ -122,7 +124,7 @@ public class CertificateController {
                 }
             }
         } else {
-            System.out.println("No employees found !");
+            logger.info("No data found for ID :" + certificateId);
         }
     }
 
@@ -138,8 +140,6 @@ public class CertificateController {
         System.out.println("Enter name of the certificate : ");
         String name = scanner.nextLine();
         certificateService.addCertificate(name);
-        System.out.println("Added successfully !");
-
     }
 
     /**
@@ -152,16 +152,17 @@ public class CertificateController {
      */
     public void validateEmployeesOfCertificate() throws EmployeeException {
         if (certificateService.getCertificates().size() == 0) {
-            System.out.println("No Certificates found");
+            logger.info("No certificates found!");
         } else {
             System.out.println("Available certificates : ");
+            logger.debug("Displaying Certificates...");
             displayCertificates();
             int certificateId = validateAndReturnNumber();
             if (certificateService.getCertificates()
                                   .containsKey(certificateId)) {
                 displayEmployees(certificateId);
             } else {
-                System.out.println("Enter Valid ID !");
+                logger.info("No data found for ID :" + certificateId);
             }
         }
     }
@@ -175,7 +176,7 @@ public class CertificateController {
      */
     public void updateCertificate() throws EmployeeException {
         if (certificateService.getCertificates().size() == 0) {
-            System.out.println("No Certificates found");
+            logger.info("No certificates found!");
         } else {
             System.out.println("---Enter Certificate ID---");
             int certificateId = validateAndReturnNumber();
@@ -186,7 +187,7 @@ public class CertificateController {
                 String name = scanner.nextLine();
                 certificateService.updateCertificate(certificateId, name);
             } else {
-                System.out.println("ID not found !");
+                logger.info("No data found for ID :" + certificateId);
             }
         }
     }
@@ -200,7 +201,7 @@ public class CertificateController {
      */
     public void deleteCertificate() throws EmployeeException {
         if (certificateService.getCertificates().size() == 0) {
-            System.out.println("No Certificates found");
+            logger.info("No certificates found!");
         } else {
             System.out.println("---Enter Certificate ID---");
             int certificateId = validateAndReturnNumber();
@@ -208,7 +209,7 @@ public class CertificateController {
                                   .containsKey(certificateId)) {
                 certificateService.deleteCertificate(certificateId);
             } else {
-                System.out.println("ID not found !");
+                logger.info("No data found for ID :" + certificateId);
             }
         }
     }

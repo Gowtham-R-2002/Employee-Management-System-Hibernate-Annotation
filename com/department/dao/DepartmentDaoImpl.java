@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.hibernate.HibernateException; 
 import org.hibernate.Session; 
 import org.hibernate.Transaction;
@@ -25,6 +27,7 @@ import com.model.Employee;
  * @version  1.0
  */
 public class DepartmentDaoImpl implements DepartmentDao {
+    private static Logger logger = LogManager.getLogger();
 
     @Override
     public void addDepartment(String name) throws EmployeeException {
@@ -34,7 +37,9 @@ public class DepartmentDaoImpl implements DepartmentDao {
             transaction = session.beginTransaction();
             Department department = new Department(name);
             Integer id = (Integer) session.save(department);
+            logger.info("Department generated with ID : " + id);
             transaction.commit();
+            logger.debug("Entering UniqueID generation stage...");
             generateUniqueId(id);
         } catch (HibernateException e) {
             if(transaction != null) {
@@ -123,9 +128,9 @@ public class DepartmentDaoImpl implements DepartmentDao {
             query.setParameter("name", name);
             int status = query.executeUpdate();
             if(status == 1) {
-                System.out.println("success");
+                logger.info("Update success for Department ID : " + departmentId);
             } else {
-                System.out.println("failed");        
+                logger.warn("Update failed for Department ID : " + departmentId);       
             }           
             transaction.commit();
         } catch (HibernateException e) {
@@ -148,6 +153,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
             query.setParameter("id", departmentId);
             query.executeUpdate();          
             transaction.commit();
+            logger.info("Department with ID : " + departmentId + " deleted!");
         } catch (HibernateException e) {           
             if(transaction != null) {
                 transaction.rollback();
@@ -184,6 +190,8 @@ public class DepartmentDaoImpl implements DepartmentDao {
             department.setUniqueId(uniqueId.toString());
             session.saveOrUpdate(department);
             transaction.commit();
+            logger.info("Unique ID generated : " + uniqueId
+                        + " for Department ID " + id);
         } catch (HibernateException e) {
             if(transaction != null) {
                 transaction.rollback();

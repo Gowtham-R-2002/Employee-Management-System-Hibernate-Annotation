@@ -6,6 +6,8 @@ import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.certificate.service.CertificateService;
 import com.certificate.service.CertificateServiceImpl;
@@ -28,10 +30,11 @@ import com.util.Validator;
  * @version  1.0
  */
 public class EmployeeController {
-    Scanner scanner = new Scanner(System.in);
-    CertificateService certificateService = new CertificateServiceImpl();
-    DepartmentService departmentService = new DepartmentServiceImpl();
-    EmployeeService employeeService = new EmployeeServiceImpl();
+    private Scanner scanner = new Scanner(System.in);
+    private static Logger logger = LogManager.getLogger();
+    private CertificateService certificateService = new CertificateServiceImpl();
+    private DepartmentService departmentService = new DepartmentServiceImpl();
+    private EmployeeService employeeService = new EmployeeServiceImpl();
 
     /**
      * <p>Gets choice on what operation to do from the user and 
@@ -90,7 +93,7 @@ public class EmployeeController {
             }
         } catch (EmployeeException e) {
             isExited = true;
-            System.out.println(e.getMessage());
+            logger.error("Application exits as an exception occured", e);
             e.printStackTrace();
         }
         if(!isExited) {
@@ -141,7 +144,7 @@ public class EmployeeController {
      */
     public void handleUpdateChoice() throws EmployeeException {
         if (employeeService.getEmployees().isEmpty()) {
-            System.out.println("No data found !");
+            logger.info("No employees found!");
         } else { 
             System.out.println("---Enter employee ID---");
             int employeeId = validateAndReturnNumber();
@@ -160,7 +163,7 @@ public class EmployeeController {
                 int updationChoice = validateAndReturnNumber();
                 updateEmployee(updationChoice, employee);
             } else {
-                System.out.println("Employee not found !");
+                logger.info("No employees found with ID : " + employeeId);
             }                    
         }
     }
@@ -214,8 +217,7 @@ public class EmployeeController {
         default:
             System.out.println("Enter valid choice");
         }
-        employeeService.updateEmployee(employee);
-        System.out.println("Update success");   
+        employeeService.updateEmployee(employee); 
     }
 
     /** 
@@ -229,7 +231,7 @@ public class EmployeeController {
      */
     public void displayEmployees() throws EmployeeException {
         if (employeeService.getEmployees().isEmpty()) {
-            System.out.println("No data found !");
+            logger.info("No employees found!");
         } else {
             String format = ("%-5s | %-15s | %-20s | %-15s | %-10s |"
                              + " %-50s | %-50s |");
@@ -252,8 +254,7 @@ public class EmployeeController {
      */
     public void createNewEmployee() throws EmployeeException {
         if (departmentService.getDepartments().size() == 0) {
-            System.out.println("No departments available");
-            System.out.println("Add an department first");
+            logger.info("No Departments found!\nAdd a department first!");
         } else {
             String name = readEmployeeName();
             System.out.println("Select Department");
@@ -270,7 +271,6 @@ public class EmployeeController {
             employeeService.addEmployee(name, departmentId, dateOfBirth,
                                         phoneNumber, doorNumber, locality,
                                         city);
-            System.out.println("Added successfully !");
         }
     }
 
@@ -303,7 +303,7 @@ public class EmployeeController {
      */
     public void displaySpecificEmployee() throws EmployeeException {
         if (employeeService.getEmployees().isEmpty()) {
-            System.out.println("No data found !");
+            logger.info("No employees found!");
         } else {
             System.out.println("---Enter employee ID---");
             int employeeId = validateAndReturnNumber();
@@ -315,7 +315,7 @@ public class EmployeeController {
                 System.out.println();
                 employeeService.getEmployeeById(employeeId).displayEmployee();
             } else {
-                System.out.println("Employee not found !");
+                logger.info("No employees found with ID : " + employeeId);
             }
         }
     }
@@ -329,16 +329,15 @@ public class EmployeeController {
      */
     public void deleteEmployee() throws EmployeeException {
         if (employeeService.getEmployees().isEmpty()) {
-            System.out.println("No data found !");
+            logger.info("No employees found!");
         } else { 
             System.out.println("---Enter employee ID---");
             int employeeId = validateAndReturnNumber();
             Employee employee = employeeService.getEmployeeById(employeeId);
             if (employee != null) {
                 employeeService.deleteEmployee(employeeId);
-                System.out.println("Delete success");
             } else {
-                System.out.println("Employee not found");
+                logger.info("No employees found with ID : " + employeeId);
             } 
         } 
     }
@@ -352,7 +351,7 @@ public class EmployeeController {
      */
     public void displayAllEmployees() throws EmployeeException {
         if (employeeService.getAllEmployees().isEmpty()) {
-            System.out.println("No data found !");
+            logger.info("No employees found!");
         } else {
             String format = ("%-5s | %-15s | %-20s | %-15s | %-10s |"
                              + " %-50s | %-50s |");
@@ -375,10 +374,9 @@ public class EmployeeController {
      */
     public void addCertificateToEmployee() throws EmployeeException {
         if (employeeService.getEmployees().isEmpty()) {
-            System.out.println("No data found !");
+            logger.info("No employees found!");
         } else if (certificateService.getCertificates().size() == 0) {
-            System.out.println("No certificates found !");
-            System.out.println("Add an certificate first...");
+            logger.info("No certificate found!\nAdd a certificate first.");
         } else { 
             System.out.println("---Enter employee ID---");
             int employeeId = validateAndReturnNumber();
@@ -391,7 +389,7 @@ public class EmployeeController {
                 int certificateId = validateAndReturnNumber();
                 validateAndAddCertificate(certificateId, employee);
             } else {
-                System.out.println("Employee not found");
+                logger.info("No employees found with ID : " + employeeId);
             }                   
         }
     }
@@ -419,12 +417,13 @@ public class EmployeeController {
             }
             if(!isPresent) {
                 certificateService.addEmployee(certificateService.getCertificate(certificateId), employee);
-                System.out.println("Added successfully !");
             } else { 
-                System.out.println("Certificate already exists");
+                logger.info("Certificate ID : " + certificateId 
+                            + " already exists for Employee ID :"
+                            + employee.getId());
             }                
         } else {
-            System.out.println("Enter valid input");
+            logger.info("Enter valid input");
         }
     }
 

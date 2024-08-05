@@ -85,7 +85,7 @@ public class EmployeeApplication {
         try {
             HibernateHelper.closeFactory();
         } catch (EmployeeException e) {
-            System.out.println(e.getMessage());
+            logger.error("Error occured while exiting!" + e);
             e.printStackTrace();
         }
     }

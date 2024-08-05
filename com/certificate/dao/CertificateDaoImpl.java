@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.hibernate.HibernateException; 
 import org.hibernate.Session; 
 import org.hibernate.Transaction;
@@ -18,6 +20,8 @@ import com.model.Department;
 import com.model.Employee;
 
 public class CertificateDaoImpl implements CertificateDao {
+    private static Logger logger = LogManager.getLogger();
+
     @Override
     public void createCertificate(String name) throws EmployeeException {
         Session session = HibernateHelper.getFactory().openSession();
@@ -26,6 +30,7 @@ public class CertificateDaoImpl implements CertificateDao {
             transaction = session.beginTransaction();
             Certificate certificate = new Certificate(name);
             Integer id = (Integer) session.save(certificate);
+            logger.info("Certificate created with ID : " + id);
             transaction.commit();
         } catch (HibernateException e) {
             if(transaction != null) {
@@ -72,8 +77,10 @@ public class CertificateDaoImpl implements CertificateDao {
             certificates.add(certificateFromDb);
             employees.add(employeeFromDb);
             session.saveOrUpdate(employeeFromDb);    
-            session.saveOrUpdate(certificateFromDb );  
+            session.saveOrUpdate(certificateFromDb);  
             transaction.commit();          
+            logger.info("Certificate with ID : " + certificate.getId()
+                        + " assigned to Employee with ID : " + employee.getId());
         } catch (HibernateException e) {
             if(transaction != null) {
                 transaction.rollback();
@@ -120,9 +127,9 @@ public class CertificateDaoImpl implements CertificateDao {
             query.setParameter("name", name);
             int status = query.executeUpdate();
             if(status == 1) {
-                System.out.println("success");
+                logger.info("Update success for Certificate ID : " + certificateId);
             } else {
-                System.out.println("failed");        
+                logger.warn("Update failed for Certificate ID : " + certificateId);       
             }           
             transaction.commit();
         } catch (HibernateException e) {
@@ -146,9 +153,9 @@ public class CertificateDaoImpl implements CertificateDao {
             query.setParameter("certificateId", certificateId);
             int status = query.executeUpdate();
             if(status == 1) {
-                System.out.println("success");
+                logger.info("Delete success for Certificate ID : " + certificateId);
             } else {
-                System.out.println("failed");        
+                logger.info("Delete failed for Certificate ID : " + certificateId); 
             }           
             transaction.commit();            
         } catch (HibernateException e) {

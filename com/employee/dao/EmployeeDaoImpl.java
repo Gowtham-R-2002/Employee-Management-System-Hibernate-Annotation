@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.query.Query; 
@@ -18,6 +20,7 @@ import com.model.Department;
 import com.model.Employee;
 
 public class EmployeeDaoImpl implements EmployeeDao {
+    private static Logger logger = LogManager.getLogger();
 
     @Override
     public void createEmployee(Employee employee) throws EmployeeException {
@@ -26,6 +29,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         try {
             transaction = session.beginTransaction();
             Integer id = (Integer) session.save(employee);
+            logger.info("Employee created with ID : " + id);
             transaction.commit();
         } catch (HibernateException e) {
             if(transaction != null) {
@@ -45,6 +49,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
             transaction = session.beginTransaction();
             session.saveOrUpdate(employee);
             transaction.commit();
+            logger.info("Employee updated with ID : " + employee.getId());
         } catch (HibernateException e) {
             if(transaction != null) {
                 transaction.rollback();
@@ -67,6 +72,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
             query.setParameter("id", id);
             query.executeUpdate();
             transaction.commit();
+            logger.info("Employee Deleted with ID : " + id);
         } catch (HibernateException e) {
             if(transaction != null) {
                 transaction.rollback();

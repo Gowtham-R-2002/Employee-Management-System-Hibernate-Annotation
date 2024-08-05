@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.department.service.DepartmentService;
 import com.department.service.DepartmentServiceImpl;
 import com.exceptions.EmployeeException;
@@ -21,8 +23,9 @@ import com.util.Validator;
  * @version  1.0
  */
 public class DepartmentController {
-    Scanner scanner = new Scanner(System.in);
-    DepartmentService departmentService = new DepartmentServiceImpl();
+    private Scanner scanner = new Scanner(System.in);
+    private static Logger logger = LogManager.getLogger();
+    private DepartmentService departmentService = new DepartmentServiceImpl();
 
     /**
      * <p>
@@ -72,7 +75,7 @@ public class DepartmentController {
             }
         } catch (EmployeeException e) {
             isExited = true;
-            System.out.println(e.getMessage());
+            logger.error("Application exits as an exception occurs !", e);
             e.printStackTrace();
         }
         if(!isExited) {
@@ -89,8 +92,7 @@ public class DepartmentController {
      */
     public void displayDepartments() throws EmployeeException {
         if (departmentService.getDepartments().size() == 0) {
-            System.out.println("No departments available");
-            System.out.println("Add an department to continue");
+            logger.info("No Departments found!\n Add a department first.");
         } else {
             Map<Integer, Department> departments 
                 = departmentService.getDepartments();        
@@ -126,7 +128,7 @@ public class DepartmentController {
                 }
             }
         } else {
-            System.out.println("No employee found !");
+            logger.info("No employees found in the department ID : " + departmentId);
         }
     }
 
@@ -142,7 +144,6 @@ public class DepartmentController {
         System.out.println("Enter name of the department :");
         String name = scanner.nextLine();
         departmentService.addDepartment(name);
-        System.out.println("Added success!");
     }
 
     /**
@@ -152,8 +153,7 @@ public class DepartmentController {
      */
     public void validateEmployeesOfDepartment() throws EmployeeException {
         if (departmentService.getDepartments().size() == 0) {
-            System.out.println("No departments available");
-            System.out.println("Add an department to continue");
+            logger.info("No Departments found!\n Add a department first.");
         } else {
             System.out.println("Available Departments :");
             displayDepartments();
@@ -162,7 +162,7 @@ public class DepartmentController {
                                  .containsKey(departmentId)) {
                 displayEmployees(departmentId);
             } else {
-                System.out.println("Enter valid Department !");
+                logger.info("Department not found with ID : " + departmentId);
             }
         }
     }
@@ -176,7 +176,7 @@ public class DepartmentController {
      */
     public void updateDepartment() throws EmployeeException {
         if (departmentService.getDepartments().size() == 0) {
-            System.out.println("No Departments found");
+            logger.info("No Departments found!\n Add a department first.");
         } else {
             System.out.println("---Enter Department ID---");
             int departmentId = validateAndReturnNumber();
@@ -187,7 +187,7 @@ public class DepartmentController {
                 String name = scanner.nextLine();
                 departmentService.updateDepartment(departmentId, name);
             } else {
-                System.out.println("ID not found !");
+                logger.info("Department not found with ID : " + departmentId);
             }
         }
     }
@@ -201,16 +201,15 @@ public class DepartmentController {
      */
     public void deleteDepartment() throws EmployeeException {
         if (departmentService.getDepartments().size() == 0) {
-            System.out.println("No Departments found");
+            logger.info("No Departments found!\n Add a department first.");
         } else {
             System.out.println("---Enter Department ID---");
             int departmentId = validateAndReturnNumber();
             if (departmentService.getDepartments()
                                   .containsKey(departmentId)) {
                 departmentService.deleteDepartment(departmentId);
-                System.out.println("Delete success !");
             } else {
-                System.out.println("ID not found !");
+                logger.info("Department not found with ID : " + departmentId);
             }
         }
     }
