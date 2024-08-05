@@ -88,5 +88,15 @@ public interface CertificateDao {
      */
     public void deleteCertificate(int certificateId) throws EmployeeException;
 
+    /**
+     * <p>
+     * Gets employees of a particular associated with a particular certificate.
+     * </p>
+     * @param id                  The ID of the certificate from where employees
+                                  need to be fetched.
+     * @return                    The employees associated with a particular certificate.
+     * @throws EmployeeException  Happens when error occurs while getting employees of
+     *                            a specific certificate.
+     */     
     public Set<Employee> getCertificateEmployees(int id) throws EmployeeException;
 }

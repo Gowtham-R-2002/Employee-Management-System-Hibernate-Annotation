@@ -1,7 +1,11 @@
 package com.util;
 
 /** 
- * Contains methods for Validation for inputs given by user
+ * <p>
+ * Contains method for Validation for inputs given by user 
+ * </p>
+ * @author   Gowtham R
+ * @version  1.0
  */
 public class Validator {
 

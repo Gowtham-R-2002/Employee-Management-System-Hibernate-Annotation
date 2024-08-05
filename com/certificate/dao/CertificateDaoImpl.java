@@ -161,15 +161,7 @@ public class CertificateDaoImpl implements CertificateDao {
         }
     }
 
-
-    /**
-     * <p>
-     * Fetches Employees from the specific certificate id provided
-     * @param id  The Id of the specific certificate
-     * @return    The Employees associated with the given certificate id
-     * @throw EmployeeException  Exception thrown when fetching all employees of
-                                 certificates has some issues.
-     */
+    @Override
     public Set<Employee> getCertificateEmployees(int id) throws EmployeeException {
         Set<Employee> employees = new HashSet<>();
         Session session = HibernateHelper.getFactory().openSession();

@@ -3,6 +3,13 @@ package com.util;
 import java.time.LocalDate;
 import java.time.Period;
 
+/**
+ * <p>
+ * Contains method for calculating age of a employee
+ * <p>
+ * @author   Gowtham R
+ * @version  1.0
+ */
 public class DateUtil {
 
     /** 

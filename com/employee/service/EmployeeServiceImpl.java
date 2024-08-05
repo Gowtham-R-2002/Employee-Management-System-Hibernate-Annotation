@@ -67,6 +67,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeDao.fetchAllEmployees();
     }
 
+    /**
+     * <p>
+     * Checks whether a employee detail is present in employees data
+     * </p>
+     * @param id                  The ID of the employee to be searched
+     * @return                    The found employee else null
+     * @throws EmployeeException  Happens when error occurs while fetching
+     *                            a specific employee detail.
+     */
     private boolean isEmployeePresent(int id) throws EmployeeException {
         boolean isPresent = false;
         List<Employee> employees = getEmployees();
