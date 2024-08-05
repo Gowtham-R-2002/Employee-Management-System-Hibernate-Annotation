@@ -7,7 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
 
-
+/**
+ * <p>
+ * Address is the exact residing location of a person
+ * Represents a employee's address and contains details of the address.
+ * </p>
+ * @author   Gowtham R
+ * @version  1.0
+ */
 @Entity
 @Table(name = "address")
 public class Address {
