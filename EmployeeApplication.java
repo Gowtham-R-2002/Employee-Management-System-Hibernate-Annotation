@@ -77,11 +77,13 @@ public class EmployeeApplication {
         return 0;
     }
     /**
-     * Main method HI
+     * Main method
+     * Use password Prod@1287$ in testing
      */
     public static void main(String[] args) {
         EmployeeApplication mainController = new EmployeeApplication();
         mainController.handleChoice();
+        String password = "Prod@123%";
         try {
             HibernateHelper.closeFactory();
         } catch (EmployeeException e) {
